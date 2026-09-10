@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <!-- Makes the website responsive on mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Calculator Web Application</title>
+
+    <!-- Connect CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="page">
+
+        <section class="calculator">
+
+            <!-- Calculator heading -->
+            <div class="calculator-header">
+                <span>CALCULATOR</span>
+                <span class="status-dot"></span>
+            </div>
+
+            <!-- Calculator display -->
+            <div class="display">
+
+                <!-- Shows previous calculation -->
+                <div id="previousDisplay" class="previous-display"></div>
+
+                <!-- Main calculator screen -->
+                <input
+                    id="display"
+                    class="main-display"
+                    type="text"
+                    value="0"
+                    aria-label="Calculator display"
+                    readonly
+                >
+
+            </div>
+
+            <!-- Error message -->
+            <div
+                id="errorMessage"
+                class="error-message"
+                role="alert">
+            </div>
+
+            <!-- Calculator buttons -->
+            <div class="buttons">
+
+                <button class="btn function" data-action="clear">
+                    AC
+                </button>
+
+                <button class="btn function" data-action="delete">
+                    DEL
+                </button>
+
+                <button class="btn operator" data-value="%">
+                    %
+                </button>
+
+                <button class="btn operator" data-value="/">
+                    ÷
+                </button>
+
+
+                <button class="btn" data-value="7">
+                    7
+                </button>
+
+                <button class="btn" data-value="8">
+                    8
+                </button>
+
+                <button class="btn" data-value="9">
+                    9
+                </button>
+
+                <button class="btn operator" data-value="*">
+                    ×
+                </button>
+
+
+                <button class="btn" data-value="4">
+                    4
+                </button>
+
+                <button class="btn" data-value="5">
+                    5
+                </button>
+
+                <button class="btn" data-value="6">
+                    6
+                </button>
+
+                <button class="btn operator" data-value="-">
+                    −
+                </button>
+
+
+                <button class="btn" data-value="1">
+                    1
+                </button>
+
+                <button class="btn" data-value="2">
+                    2
+                </button>
+
+                <button class="btn" data-value="3">
+                    3
+                </button>
+
+                <button class="btn operator" data-value="+">
+                    +
+                </button>
+
+
+                <button class="btn zero" data-value="0">
+                    0
+                </button>
+
+                <button class="btn" data-value=".">
+                    .
+                </button>
+
+                <button class="btn equals" data-action="calculate">
+                    =
+                </button>
+
+            </div>
+
+            <p class="keyboard-help">
+                Keyboard: 0–9 &nbsp; + − × ÷ &nbsp;
+                Enter = calculate &nbsp; Esc = clear
+            </p>
+
+        </section>
+
+    </main>
+
+    <!-- Connect JavaScript -->
+    <script src="script.js"></script>
+
+</body>
+</html>
