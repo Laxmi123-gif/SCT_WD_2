@@ -1,247 +1,159 @@
-// Get elements from HTML
+// Get the display element from HTML
 const display = document.getElementById("display");
 
-const previousDisplay = document.getElementById("previousDisplay");
+// Get the error message element
+const error = document.getElementById("error");
 
-const errorMessage = document.getElementById("errorMessage");
-
-const buttons = document.querySelector(".buttons");
-
-// Stores the current calculation
+// This variable stores the calculator expression
 let expression = "";
 
-// Used to know whether the previous action was "="
-let justCalculated = false;
+// ========================================
+// ADD VALUE TO DISPLAY
+// ========================================
 
-// Update calculator display
-function updateDisplay() {
-  // If expression is empty, show 0
-  display.value = expression || "0";
-}
+function addToDisplay(value) {
+  // Remove previous error
+  error.textContent = "";
 
-// Remove error message
-function clearError() {
-  errorMessage.textContent = "";
-}
-
-// Show error message
-function showError(message) {
-  errorMessage.textContent = message;
-}
-
-// Add number/operator to calculator
-function addValue(value) {
-  clearError();
-
-  // If calculation was already completed
+  // If the previous result was calculated
   // and user enters a number,
-  // start a new calculation.
-  if (justCalculated && /[0-9.]/.test(value)) {
+  // start a new calculation
+  if (display.value !== "0" && expression === "" && !isNaN(value)) {
     expression = "";
-
-    previousDisplay.textContent = "";
-
-    justCalculated = false;
   }
 
-  // Handle decimal point
-  if (value === ".") {
-    // Get current number
-    const currentNumber = expression.split(/[+\-*/%]/).pop();
+  // Add the clicked value
+  expression = expression + value;
 
-    // Don't allow two decimal points
-    if (currentNumber.includes(".")) {
-      return;
-    }
-
-    // If user starts with decimal,
-    // automatically add 0.
-    if (currentNumber === "") {
-      expression += "0";
-    }
-  }
-
-  // Handle operators
-  if (/[+\-*/%]/.test(value)) {
-    justCalculated = false;
-
-    // If expression is empty
-    if (expression === "") {
-      // Allow negative numbers
-      if (value === "-") {
-        expression = "-";
-      }
-
-      updateDisplay();
-
-      return;
-    }
-
-    // Get last character
-    const lastCharacter = expression[expression.length - 1];
-
-    // Don't allow multiple operators
-    if (/[+\-*/%]/.test(lastCharacter)) {
-      expression = expression.slice(0, -1) + value;
-
-      updateDisplay();
-
-      return;
-    }
-  }
-
-  // Add value
-  expression += value;
-
-  updateDisplay();
+  // Show expression on display
+  display.value = expression;
 }
 
-// Delete last character
-function deleteLast() {
-  clearError();
+// ========================================
+// CLEAR DISPLAY
+// ========================================
 
-  justCalculated = false;
-
-  expression = expression.slice(0, -1);
-
-  updateDisplay();
-}
-
-// Clear calculator
-function clearCalculator() {
+function clearDisplay() {
+  // Remove everything
   expression = "";
 
-  justCalculated = false;
+  // Reset display
+  display.value = "0";
 
-  previousDisplay.textContent = "";
-
-  clearError();
-
-  updateDisplay();
+  // Remove error
+  error.textContent = "";
 }
 
-// Calculate result
+// ========================================
+// DELETE LAST CHARACTER
+// ========================================
+
+function deleteLast() {
+  // Remove last character
+  expression = expression.substring(0, expression.length - 1);
+
+  // If nothing is left
+  if (expression === "") {
+    display.value = "0";
+  } else {
+    display.value = expression;
+  }
+
+  // Remove error
+  error.textContent = "";
+}
+
+// ========================================
+// CALCULATE RESULT
+// ========================================
+
 function calculate() {
-  clearError();
+  // Remove previous error
+  error.textContent = "";
 
-  // Nothing to calculate
-  if (!expression) {
+  // Check if display is empty
+  if (expression === "") {
     return;
   }
 
-  // Convert multiplication/division symbols
-  const safeExpression = expression.replace(/×/g, "*").replace(/÷/g, "/");
+  // Check if expression ends with operator
+  const lastCharacter = expression[expression.length - 1];
 
-  // Allow only numbers and basic operators
-  if (!/^[0-9+\-*/%.\s]+$/.test(safeExpression)) {
-    showError("Invalid input");
-
-    return;
-  }
-
-  // Don't calculate incomplete expression
-  if (/[+\-*/%.]$/.test(safeExpression)) {
-    showError("Complete the calculation first");
+  if (
+    lastCharacter === "+" ||
+    lastCharacter === "-" ||
+    lastCharacter === "*" ||
+    lastCharacter === "/" ||
+    lastCharacter === "%"
+  ) {
+    error.textContent = "Complete the calculation";
 
     return;
   }
 
   try {
-    // Calculate expression
-    const result = Function('"use strict"; return (' + safeExpression + ")")();
+    // Calculate the expression
+    const result = Function("return " + expression)();
 
-    // Check invalid result
+    // Check for invalid result
     if (!Number.isFinite(result)) {
-      showError("Cannot divide by zero");
+      error.textContent = "Cannot divide by zero";
 
       return;
     }
 
-    // Show previous calculation
-    previousDisplay.textContent = expression + " =";
+    // Show result
+    display.value = result;
 
     // Store result
-    expression = String(Number(result.toFixed(10)));
-
-    justCalculated = true;
-
-    // Update screen
-    updateDisplay();
-  } catch (error) {
-    showError("Invalid calculation");
+    expression = String(result);
+  } catch {
+    // Show error
+    error.textContent = "Invalid calculation";
   }
 }
 
-// Handle button clicks
-buttons.addEventListener("click", function (event) {
-  // Find clicked button
-  const button = event.target.closest("button");
-
-  if (!button) {
-    return;
-  }
-
-  // Get button value
-  const value = button.dataset.value;
-
-  // Get button action
-  const action = button.dataset.action;
-
-  // Number/operator button
-  if (value !== undefined) {
-    addValue(value);
-  }
-
-  // AC button
-  if (action === "clear") {
-    clearCalculator();
-  }
-
-  // DEL button
-  if (action === "delete") {
-    deleteLast();
-  }
-
-  // Equal button
-  if (action === "calculate") {
-    calculate();
-  }
-});
-
+// ========================================
+// KEYBOARD INPUT
+// ========================================
 
 document.addEventListener("keydown", function (event) {
+  // Get pressed key
   const key = event.key;
-  // Numbers and decimal
-  if (/^[0-9]$/.test(key) || key === ".") {
-    addValue(key);
-    return;
+
+  // Numbers
+  if (key >= "0" && key <= "9") {
+    addToDisplay(key);
   }
+
+  // Decimal point
+  else if (key === ".") {
+    addToDisplay(".");
+  }
+
   // Operators
-  if (["+", "-", "*", "/", "%"].includes(key)) {
-    addValue(key);
-
-    return;
+  else if (
+    key === "+" ||
+    key === "-" ||
+    key === "*" ||
+    key === "/" ||
+    key === "%"
+  ) {
+    addToDisplay(key);
   }
 
-  // Enter or =
-  if (key === "Enter" || key === "=") {
-    event.preventDefault();
-
+  // Enter = Calculate
+  else if (key === "Enter") {
     calculate();
-
-    return;
   }
 
-  // Backspace
-  if (key === "Backspace") {
+  // Backspace = Delete
+  else if (key === "Backspace") {
     deleteLast();
-
-    return;
   }
 
-  if (key === "Escape") {
-    clearCalculator();
+  // Escape = Clear
+  else if (key === "Escape") {
+    clearDisplay();
   }
 });
-
-updateDisplay();

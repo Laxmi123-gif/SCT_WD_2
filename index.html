@@ -1,150 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
 
-    <!-- Makes the website responsive on mobile -->
+    <!-- Makes the website responsive on mobile, tablet and desktop -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Calculator Web Application</title>
 
-    <!-- Connect CSS -->
+    <!-- Connect CSS file -->
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <main class="page">
+    <div class="calculator">
 
-        <section class="calculator">
+        <!-- Calculator title -->
+        <h1>Calculator</h1>
 
-            <!-- Calculator heading -->
-            <div class="calculator-header">
-                <span>CALCULATOR</span>
-                <span class="status-dot"></span>
-            </div>
+        <!-- Display -->
+        <div class="display">
+            <input
+                type="text"
+                id="display"
+                value="0"
+                readonly
+            >
+        </div>
 
-            <!-- Calculator display -->
-            <div class="display">
+        <!-- Error message -->
+        <p id="error"></p>
 
-                <!-- Shows previous calculation -->
-                <div id="previousDisplay" class="previous-display"></div>
+        <!-- Calculator buttons -->
+        <div class="buttons">
 
-                <!-- Main calculator screen -->
-                <input
-                    id="display"
-                    class="main-display"
-                    type="text"
-                    value="0"
-                    aria-label="Calculator display"
-                    readonly
-                >
+            <!-- First row -->
+            <button class="special" onclick="clearDisplay()">AC</button>
+            <button class="special" onclick="deleteLast()">DEL</button>
+            <button class="operator" onclick="addToDisplay('%')">%</button>
+            <button class="operator" onclick="addToDisplay('/')">÷</button>
 
-            </div>
+            <!-- Second row -->
+            <button onclick="addToDisplay('7')">7</button>
+            <button onclick="addToDisplay('8')">8</button>
+            <button onclick="addToDisplay('9')">9</button>
+            <button class="operator" onclick="addToDisplay('*')">×</button>
 
-            <!-- Error message -->
-            <div
-                id="errorMessage"
-                class="error-message"
-                role="alert">
-            </div>
+            <!-- Third row -->
+            <button onclick="addToDisplay('4')">4</button>
+            <button onclick="addToDisplay('5')">5</button>
+            <button onclick="addToDisplay('6')">6</button>
+            <button class="operator" onclick="addToDisplay('-')">−</button>
 
-            <!-- Calculator buttons -->
-            <div class="buttons">
+            <!-- Fourth row -->
+            <button onclick="addToDisplay('1')">1</button>
+            <button onclick="addToDisplay('2')">2</button>
+            <button onclick="addToDisplay('3')">3</button>
+            <button class="operator" onclick="addToDisplay('+')">+</button>
 
-                <button class="btn function" data-action="clear">
-                    AC
-                </button>
+            <!-- Fifth row -->
+            <button class="zero" onclick="addToDisplay('0')">0</button>
+            <button onclick="addToDisplay('.')">.</button>
+            <button class="equal" onclick="calculate()">=</button>
 
-                <button class="btn function" data-action="delete">
-                    DEL
-                </button>
+        </div>
 
-                <button class="btn operator" data-value="%">
-                    %
-                </button>
+        <!-- Keyboard information -->
+        <p class="keyboard-text">
+            You can also use your keyboard
+        </p>
 
-                <button class="btn operator" data-value="/">
-                    ÷
-                </button>
+    </div>
 
-
-                <button class="btn" data-value="7">
-                    7
-                </button>
-
-                <button class="btn" data-value="8">
-                    8
-                </button>
-
-                <button class="btn" data-value="9">
-                    9
-                </button>
-
-                <button class="btn operator" data-value="*">
-                    ×
-                </button>
-
-
-                <button class="btn" data-value="4">
-                    4
-                </button>
-
-                <button class="btn" data-value="5">
-                    5
-                </button>
-
-                <button class="btn" data-value="6">
-                    6
-                </button>
-
-                <button class="btn operator" data-value="-">
-                    −
-                </button>
-
-
-                <button class="btn" data-value="1">
-                    1
-                </button>
-
-                <button class="btn" data-value="2">
-                    2
-                </button>
-
-                <button class="btn" data-value="3">
-                    3
-                </button>
-
-                <button class="btn operator" data-value="+">
-                    +
-                </button>
-
-
-                <button class="btn zero" data-value="0">
-                    0
-                </button>
-
-                <button class="btn" data-value=".">
-                    .
-                </button>
-
-                <button class="btn equals" data-action="calculate">
-                    =
-                </button>
-
-            </div>
-
-            <p class="keyboard-help">
-                Keyboard: 0–9 &nbsp; + − × ÷ &nbsp;
-                Enter = calculate &nbsp; Esc = clear
-            </p>
-
-        </section>
-
-    </main>
-
-    <!-- Connect JavaScript -->
+    <!-- Connect JavaScript file -->
     <script src="script.js"></script>
 
 </body>
+
 </html>
